@@ -18,11 +18,11 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "terabee_manager");
 
   ros::NodeHandle n;
-  ros::Publisher pub = n.advertise<std_msgs::Float32MultiArray>("/niv1/lidar_terabee", 100);
+  ros::Publisher pub = n.advertise<std_msgs::Float32MultiArray>("/niv1/lidar_terabee", 10);
 
   ros::Subscriber sub[8];
   for(int i = 0; i<8; i++){
-    sub[i] = n.subscribe("/niv1/terabee_lidar_"+std::to_string(i), 1000, chatterCallback); 
+    sub[i] = n.subscribe("/niv1/terabee_lidar_"+std::to_string(i), 5, chatterCallback); 
     ROS_INFO("subscribe /niv1/terabee_lidar_%d", i);
   }
 

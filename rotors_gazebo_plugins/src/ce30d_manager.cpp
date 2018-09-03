@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
   ros::NodeHandle n;
 
   ros::Subscriber sub;
-  sub = n.subscribe("/niv1/lidar_0", 1000, chatterCallback);
+  sub = n.subscribe("/niv1/ce30_lidar_1", 5, chatterCallback);
 
   ros::Rate loop_rate(30);
 
