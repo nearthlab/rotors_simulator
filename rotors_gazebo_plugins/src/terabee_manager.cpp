@@ -21,9 +21,19 @@ int main(int argc, char **argv)
   ros::Publisher pub = n.advertise<std_msgs::Float32MultiArray>("/niv1/lidar_terabee", 100);
 
   ros::Subscriber sub[8];
+
+  // int lidar_number;
+  // if(!n.getParam("lidar_number", lidar_number)){
+  //   ROS_ERROR("lidar_number is not specified!");
+  //   return -1;
+  // }
+  
   for(int i = 0; i<8; i++){
-    sub[i] = n.subscribe("/niv1/lidar_"+std::to_string(i), 1000, chatterCallback); 
-    ROS_INFO("subscribe /niv1/lidar_%d", i);
+    char topic_name[20];
+    sprintf(topic_name, "/niv1/lidar_terabee_%d", i);
+
+    sub[i] = n.subscribe(topic_name, 1000, chatterCallback); 
+    ROS_INFO("subscribe %s", topic_name);
   }
 
   ros::Rate loop_rate(120);
