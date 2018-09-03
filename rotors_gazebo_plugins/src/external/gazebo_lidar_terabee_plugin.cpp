@@ -159,10 +159,6 @@ void GazeboLidarTerabeePlugin::OnNewLaserScans() {
   std::vector<std::string> results;
   boost::split(results, lidar_topic_, [](char c){return c=='_';});
   int index = std::stoi(results[2]);
-<<<<<<< HEAD
-
-=======
->>>>>>> 063d48428301b5034317c79248ba2db3c2babbef
   array_msg.data.push_back((float)index);
   array_msg.data.push_back(min_range);
   // gzdbg << "sensorName: " << parentSensor->Name() << min_range << std::endl;

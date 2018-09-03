@@ -29,16 +29,11 @@ int main(int argc, char **argv)
   // }
   
   for(int i = 0; i<8; i++){
-<<<<<<< HEAD
     char topic_name[20];
     sprintf(topic_name, "/niv1/lidar_terabee_%d", i);
 
     sub[i] = n.subscribe(topic_name, 1000, chatterCallback); 
     ROS_INFO("subscribe %s", topic_name);
-=======
-    sub[i] = n.subscribe("/niv1/terabee_lidar_"+std::to_string(i), 1000, chatterCallback); 
-    ROS_INFO("subscribe /niv1/terabee_lidar_%d", i);
->>>>>>> 063d48428301b5034317c79248ba2db3c2babbef
   }
 
   ros::Rate loop_rate(120);
