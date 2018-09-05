@@ -299,7 +299,7 @@ if(${gazebo_VERSION_MAJOR} GREATER 4)
   endif()
   list(APPEND targets_to_install rotors_gazebo_lidar_terabee_plugin)
 else()
-  message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_plugin.cpp.")
+  message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_terabee_plugin.cpp.")
 endif()
 
 #======================================== LIDAR_CE30D PLUGIN ==========================================//
@@ -314,7 +314,19 @@ if(${gazebo_VERSION_MAJOR} GREATER 4)
   endif()
   list(APPEND targets_to_install rotors_gazebo_lidar_ce30d_plugin)
 else()
-  message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_plugin.cpp.")
+  message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_ce30d_plugin.cpp.")
+endif()
+
+#======================================== LIDAR_SCANSE PLUGIN ==========================================//
+if(${gazebo_VERSION_MAJOR} GREATER 4)
+  add_library(rotors_gazebo_lidar_scanse_plugin SHARED src/external/gazebo_lidar_scanse_plugin.cpp)
+  target_link_libraries(rotors_gazebo_lidar_scanse_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+  if (NOT NO_ROS)
+    add_dependencies(rotors_gazebo_lidar_scanse_plugin ${catkin_EXPORTED_TARGETS})
+  endif()
+  list(APPEND targets_to_install rotors_gazebo_lidar_scanse_plugin)
+else()
+  message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_scanse_plugin.cpp.")
 endif()
 
 #===================================== MAGNETOMETER PLUGIN ======================================//
