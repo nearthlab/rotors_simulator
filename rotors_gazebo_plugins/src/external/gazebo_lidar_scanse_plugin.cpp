@@ -39,15 +39,36 @@
 #include <cmath>
 #include "ConnectGazeboToRosTopic.pb.h"
 
-#define PI  3.141592
-#define D2R PI/180.0
-#define R2D 180.0/PI
+#define PIf  3.141592
+#define D2R PIf/180.0
+#define R2D 180.0/PIf
 
 double constrainAngle(double x){
     x = fmod(x,360.0);
     if (x < 0.0)
         x += 360.0;
     return x;
+}
+
+// wrap-up function, angle between -PI and PI
+float wrap(float _angle)
+{
+    _angle = fmod(_angle, 2.0*PIf);
+
+    if(_angle < -PIf)
+    {
+        _angle += 2.0*PIf;
+    }
+    else if(_angle > PIf)
+    {
+        _angle -= 2.0*PIf;
+    }
+    else
+    {
+        _angle = _angle;
+    }
+
+    return _angle;
 }
 
 using namespace gazebo;
@@ -163,7 +184,7 @@ void GazeboLidarScansePlugin::OnNewLaserScans() {
   
   //ROS_INFO("range:%.4f, angle:%.2f", min_range, angle_raw);
   //ROS_INFO(" ");
-  array_msg.data.push_back(min_range);  
+  array_msg.data.push_back(min_range); 
   array_msg.data.push_back(angle_raw);
   array_msg.data.push_back(xrel);
   array_msg.data.push_back(yrel);
