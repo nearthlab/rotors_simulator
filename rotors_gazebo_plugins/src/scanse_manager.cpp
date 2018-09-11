@@ -67,11 +67,11 @@ void ScanseRayCallback(const std_msgs::Float32MultiArray::ConstPtr& msg)
   mc_msg::SweepInfo sweepInfo;
 
   sweepInfo.range = sat(msg->data[0]);
-  sweepInfo.angle = wrap(msg->data[1]*D2R);
+  sweepInfo.angle = (msg->data[1]);
   sweepInfo.xrel = msg->data[2];
   sweepInfo.yrel = msg->data[3];
 
-  if((fabs(currAng - prevAng) > 180.0))
+  if((fabs(currAng - prevAng) > 180.0f))
   {
     msgArray.VecSweepInfo.push_back(sweepInfo); 
     sort(msgArray.VecSweepInfo.begin(), msgArray.VecSweepInfo.end(), &(SortbyAngle_asc));
