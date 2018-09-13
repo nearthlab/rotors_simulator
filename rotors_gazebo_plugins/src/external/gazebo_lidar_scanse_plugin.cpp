@@ -170,7 +170,7 @@ void GazeboLidarScansePlugin::OnNewLaserScans() {
   math::Angle angle = this->joint->GetAngle(0);
   angle_raw = (angle.Degree());
   angle_raw = constrainAngle(angle_raw);
-  angle.Normalize();
+  //angle.Normalize();
 
   // ss << parentSensor->GetRange(i) <<" ";
   
