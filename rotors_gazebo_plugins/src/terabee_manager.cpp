@@ -71,6 +71,13 @@ int main(int argc, char **argv)
   ros::Publisher pub_info = n.advertise<mc_msg::TeraRangerInfoArray>("/niv1/lidar_terabee_info", 10);
 
   ros::Subscriber sub[8];
+
+  // int lidar_number;
+  // if(!n.getParam("lidar_number", lidar_number)){
+  //   ROS_ERROR("lidar_number is not specified!");
+  //   return -1;
+  // }
+  
   for(int i = 0; i<8; i++){
     sub[i] = n.subscribe("/niv1/terabee_lidar_"+std::to_string(i), 5, chatterCallback); 
     ROS_INFO("subscribe /niv1/terabee_lidar_%d", i);
