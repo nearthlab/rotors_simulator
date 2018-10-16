@@ -185,7 +185,7 @@ void GazeboLidarScansePlugin::OnNewLaserScans() {
   //ROS_INFO("range:%.4f, angle:%.2f", min_range, angle_raw);
   //ROS_INFO(" ");
   array_msg.data.push_back(min_range); 
-  array_msg.data.push_back(angle_raw);
+  array_msg.data.push_back(angle_raw*D2R);
   array_msg.data.push_back(xrel);
   array_msg.data.push_back(yrel);
 

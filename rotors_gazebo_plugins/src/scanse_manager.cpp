@@ -3,7 +3,7 @@
 #include "std_msgs/Float32.h"
 #include "mc_msg/SweepInfo.h"
 #include "mc_msg/SweepInfoArray.h"
-#define PIf  3.141592
+#define PIf  3.14159265359
 #define D2R PIf/180.0
 #define R2D 180.0/PIf
 #include <sstream>
@@ -71,7 +71,7 @@ void ScanseRayCallback(const std_msgs::Float32MultiArray::ConstPtr& msg)
   sweepInfo.xrel = msg->data[2];
   sweepInfo.yrel = msg->data[3];
 
-  if((fabs(currAng - prevAng) > 180.0f))
+  if((fabs(currAng - prevAng) > PIf))
   {
     msgArray.VecSweepInfo.push_back(sweepInfo); 
     sort(msgArray.VecSweepInfo.begin(), msgArray.VecSweepInfo.end(), &(SortbyAngle_asc));
