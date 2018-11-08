@@ -105,6 +105,8 @@ void GazeboRosInterfacePlugin::Load(physics::WorldPtr _world,
 void GazeboRosInterfacePlugin::OnUpdate(const common::UpdateInfo& _info) {
   // Do nothing
   // This plugins actions are all executed through message callbacks.
+  if (world_->GetEnablePhysicsEngine())
+        world_->EnablePhysicsEngine(false);
 }
 
 /// \brief      A helper class that provides storage for additional parameters

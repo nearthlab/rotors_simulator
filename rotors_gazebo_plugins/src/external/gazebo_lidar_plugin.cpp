@@ -169,5 +169,5 @@ void GazeboLidarPlugin::CreatePubsAndSubs() {
   // rosnode_ = new ros::NodeHandle("niv1");
   // lidar_pub_ = nh.advertise<lidar_msgs::msgs::lidar>("/niv1/lidar", 10);
   lidar_pub_ = nh.advertise<std_msgs::Float32MultiArray>(
-      "/" + namespace_ + "/" + lidar_topic_, 10);
+      "/" + namespace_ + "/" + lidar_topic_, 50);
 }

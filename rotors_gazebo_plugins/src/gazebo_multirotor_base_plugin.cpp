@@ -119,8 +119,8 @@ void GazeboMultirotorBasePlugin::OnUpdate(const common::UpdateInfo& _info) {
   joint_state_msg_.clear_name();
   joint_state_msg_.clear_position();
 
-  link_->SetAngularVel(link_->GetWorldAngularVel() * (1-angular_air_resistance_)); // added by hjs
-  link_->SetLinearVel (link_->GetWorldLinearVel    () * (1- linear_air_resistance_)); // added by hjs
+  // link_->SetAngularVel(link_->GetWorldAngularVel() * (1-angular_air_resistance_)); // added by hjs
+  // link_->SetLinearVel (link_->GetWorldLinearVel    () * (1- linear_air_resistance_)); // added by hjs
   
   MotorNumberToJointMap::iterator m;
   for (m = motor_joints_.begin(); m != motor_joints_.end(); ++m) {
@@ -133,8 +133,8 @@ void GazeboMultirotorBasePlugin::OnUpdate(const common::UpdateInfo& _info) {
     joint_state_msg_.add_position(m->second->GetAngle(0).Radian());
   }
 
-  joint_state_pub_->Publish(joint_state_msg_);
-  motor_pub_->Publish(actuators_msg_);
+  // joint_state_pub_->Publish(joint_state_msg_);
+  // motor_pub_->Publish(actuators_msg_);
 }
 
 void GazeboMultirotorBasePlugin::CreatePubsAndSubs() {
