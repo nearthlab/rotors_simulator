@@ -22,7 +22,6 @@
 #ifndef _GAZEBO_RAY_PLUGIN_HH_
 #define _GAZEBO_RAY_PLUGIN_HH_
 
-#include <cstdint>
 #include "gazebo/common/Plugin.hh"
 #include "gazebo/sensors/SensorTypes.hh"
 #include "gazebo/sensors/RaySensor.hh"
@@ -72,13 +71,8 @@ namespace gazebo
       transport::NodePtr node_handle_;
       //transport::PublisherPtr lidar_pub_;
       ros::Publisher lidar_pub_;
-      ros::Publisher lidar_distance;
-
       std::string namespace_;
       std::string lidar_topic_;
-      
-      bool startStatus = false;
-      std::uint32_t readStatus = 0;
 
     /// \brief The connection tied to RayPlugin::OnNewLaserScans()
     private: 

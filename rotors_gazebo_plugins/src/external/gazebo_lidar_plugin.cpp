@@ -38,9 +38,6 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "std_msgs/MultiArrayDimension.h"
 
-#include "mc_msg/VuRawInfo.h"
-#include "mc_msg/VuRawInfoArray.h"
-
 #include "rotors_gazebo_plugins/common.h"
 
 // 3RD PARTY
@@ -137,8 +134,7 @@ void GazeboLidarPlugin::OnNewLaserScans()
   lidar_message.set_max_distance(parentSensor->GetRangeMax());
   lidar_message.set_current_distance(parentSensor->GetRange(0));
 #endif
-  mc_msg::VuRawInfoArray vuRawInfoArray;
-  
+
   std_msgs::Float32MultiArray array_msg;
   array_msg.data.clear();
   std_msgs::MultiArrayDimension dim;
@@ -146,14 +142,15 @@ void GazeboLidarPlugin::OnNewLaserScans()
   dim.size = 8;
   dim.stride = 8;
   array_msg.layout.dim.push_back(dim);
-  
   std::vector<double> ranges;
+
   parentSensor->Ranges(ranges);
   int count = ranges.size();
   int resolution = count / 8;
   int i, k;
   float range, min_range;
   for (i = 7; i >= 0; i--) {
+    // ss << parentSensor->GetRange(i) <<" ";
     min_range = parentSensor->RangeMax();
     for (k = 0; k < resolution; k++) {
       range = ranges[(i * resolution) + k];
@@ -161,28 +158,16 @@ void GazeboLidarPlugin::OnNewLaserScans()
         min_range = range;
       }
     }
-    array_msg.data.push_back(min_range); // msg.data
+    array_msg.data.push_back(min_range);
   }
-
-  for (i = 0; i < 8l; i++) {
-    mc_msg::VuRawInfo vuRawInfo;
-    if (array_msg.data[i] < 30.0 && array_msg.data[i] > 1.5) {
-      vuRawInfo.segVal = 1;
-    } else {
-      vuRawInfo.segVal = 0;
-    }
-    vuRawInfo.range = array_msg.data[i];
-    vuRawInfo.numchunk = i;
-    vuRawInfoArray.VecVuRawInfo.push_back(vuRawInfo);
-  }
-  vuRawInfoArray.StartStatus = true;
-  vuRawInfoArray.ReadStatus = readStatus++;
-  lidar_pub_.publish(vuRawInfoArray);
-  // lidar_distance.publish(array_msg);
+  lidar_pub_.publish(array_msg);
 }
 
 void GazeboLidarPlugin::CreatePubsAndSubs() {
   gzdbg << "Lidar pub , ros init = " << ros::isInitialized() << std::endl;
   ros::NodeHandle nh;
-  lidar_pub_ = nh.advertise<mc_msg::VuRawInfoArray>("/" + namespace_ + "/" + lidar_topic_, 10);
+  // rosnode_ = new ros::NodeHandle("niv1");
+  // lidar_pub_ = nh.advertise<lidar_msgs::msgs::lidar>("/niv1/lidar", 10);
+  lidar_pub_ = nh.advertise<std_msgs::Float32MultiArray>(
+      "/" + namespace_ + "/" + lidar_topic_, 10);
 }
