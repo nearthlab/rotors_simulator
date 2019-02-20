@@ -19,7 +19,7 @@
  * Author: Nate Koenig mod by John Hsu
  */
 
-#include "rotors_gazebo_plugins/external/gazebo_lidar_plugin.h"
+#include "rotors_gazebo_plugins/external/gazebo_gimbal_lidar_leddarvu_plugin.h"
 #include "gazebo/physics/physics.hh"
 
 #include <gazebo/common/Plugin.hh>
@@ -54,11 +54,11 @@ using namespace gazebo;
 using namespace std;
 
 // Register this plugin with the simulator
-GZ_REGISTER_SENSOR_PLUGIN(GazeboLidarPlugin)
+GZ_REGISTER_SENSOR_PLUGIN(GazeboGimbalLidarLeddarVuPlugin)
 
-GazeboLidarPlugin::GazeboLidarPlugin() : pubs_and_subs_created_(false) {}
+GazeboGimbalLidarLeddarVuPlugin::GazeboGimbalLidarLeddarVuPlugin() : pubs_and_subs_created_(false) {}
 
-GazeboLidarPlugin::~GazeboLidarPlugin() {
+GazeboGimbalLidarLeddarVuPlugin::~GazeboGimbalLidarLeddarVuPlugin() {
 #if GAZEBO_MAJOR_VERSION >= 7
   this->parentSensor->LaserShape()->DisconnectNewLaserScans(
 #else
@@ -71,7 +71,7 @@ GazeboLidarPlugin::~GazeboLidarPlugin() {
   this->world.reset();
 }
 
-void GazeboLidarPlugin::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf) {
+void GazeboGimbalLidarLeddarVuPlugin::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf) {
   if (kPrintOnPluginLoad) {
     gzdbg << __FUNCTION__ << "() called." << std::endl;
   }
@@ -99,7 +99,7 @@ void GazeboLidarPlugin::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf) {
 #else
       this->parentSensor->GetLaserShape()->ConnectNewLaserScans(
 #endif
-          boost::bind(&GazeboLidarPlugin::OnNewLaserScans, this));
+          boost::bind(&GazeboGimbalLidarLeddarVuPlugin::OnNewLaserScans, this));
 
   if (_sdf->HasElement("robotNamespace"))
     namespace_ = _sdf->GetElement("robotNamespace")->Get<std::string>();
@@ -120,7 +120,7 @@ void GazeboLidarPlugin::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf) {
 #endif
 }
 
-void GazeboLidarPlugin::OnNewLaserScans()
+void GazeboGimbalLidarLeddarVuPlugin::OnNewLaserScans()
 {
   if (!pubs_and_subs_created_) {
     CreatePubsAndSubs();
@@ -178,10 +178,9 @@ void GazeboLidarPlugin::OnNewLaserScans()
   vuRawInfoArray.StartStatus = true;
   vuRawInfoArray.ReadStatus = readStatus++;
   lidar_pub_.publish(vuRawInfoArray);
-  // lidar_distance.publish(array_msg);
 }
 
-void GazeboLidarPlugin::CreatePubsAndSubs() {
+void GazeboGimbalLidarLeddarVuPlugin::CreatePubsAndSubs() {
   gzdbg << "Lidar pub , ros init = " << ros::isInitialized() << std::endl;
   ros::NodeHandle nh;
   lidar_pub_ = nh.advertise<mc_msg::VuRawInfoArray>("/" + namespace_ + "/" + lidar_topic_, 10);

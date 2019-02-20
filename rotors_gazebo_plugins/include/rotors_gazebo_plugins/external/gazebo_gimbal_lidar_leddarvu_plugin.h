@@ -39,13 +39,13 @@
 namespace gazebo
 {
   /// \brief    A Gazebo LIDAR plugin.
-  class GAZEBO_VISIBLE GazeboLidarPlugin : public SensorPlugin
+  class GAZEBO_VISIBLE GazeboGimbalLidarLeddarVuPlugin : public SensorPlugin
   {
     /// \brief Constructor
-    public: GazeboLidarPlugin();
+    public: GazeboGimbalLidarLeddarVuPlugin();
 
     /// \brief Destructor
-    public: virtual ~GazeboLidarPlugin();
+    public: virtual ~GazeboGimbalLidarLeddarVuPlugin();
 
     /// \brief Update callback
     public: virtual void OnNewLaserScans();
@@ -72,7 +72,6 @@ namespace gazebo
       transport::NodePtr node_handle_;
       //transport::PublisherPtr lidar_pub_;
       ros::Publisher lidar_pub_;
-      ros::Publisher lidar_distance;
 
       std::string namespace_;
       std::string lidar_topic_;

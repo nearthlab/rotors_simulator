@@ -332,6 +332,18 @@ else()
   message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_scanse_plugin.cpp.")
 endif()
 
+#======================================== LIDAR_LEDDARVU_PLUGIN ==========================================//
+if(${gazebo_VERSION_MAJOR} GREATER 4)
+  add_library(rotors_gazebo_gimbal_lidar_leddarvu_plugin SHARED src/external/gazebo_gimbal_lidar_leddarvu_plugin.cpp)
+  target_link_libraries(rotors_gazebo_gimbal_lidar_leddarvu_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+  if (NOT NO_ROS)
+    add_dependencies(rotors_gazebo_gimbal_lidar_leddarvu_plugin ${catkin_EXPORTED_TARGETS})
+  endif()
+  list(APPEND targets_to_install rotors_gazebo_gimbal_lidar_leddarvu_plugin)
+else()
+  message(STATUS "Gazebo version is less than 5, not building rotors_gazebo_gimbal_lidar_leddarvu_plugin.cpp.")
+endif()
+
 #===================================== MAGNETOMETER PLUGIN ======================================//
 add_library(rotors_gazebo_magnetometer_plugin SHARED src/gazebo_magnetometer_plugin.cpp)
 target_link_libraries(rotors_gazebo_magnetometer_plugin ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
