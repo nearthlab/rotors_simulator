@@ -96,8 +96,10 @@ if (NOT NO_ROS)
   find_package(catkin REQUIRED COMPONENTS
     cmake_modules
     cv_bridge
+    image_transport
     geometry_msgs
     sensor_msgs
+    stereo_msgs
     mav_msgs
     octomap_msgs
     octomap_ros
@@ -331,6 +333,14 @@ if(${gazebo_VERSION_MAJOR} GREATER 4)
 else()
   message(STATUS "Gazebo version is less than 5, not building gazebo_lidar_scanse_plugin.cpp.")
 endif()
+
+#======================================== Disparity_to_Depth PLUGIN ==========================================//
+if(${gazebo_VERSION_MAJOR} GREATER 4)
+  add_executable(disparity_to_depthmap src/disparity_to_depthmap_node.cpp)
+  target_link_libraries(disparity_to_depthmap ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+else()
+  message(STATUS "Gazebo version is less than 5, not building disparity_to_depthmap node.")
+endif() 
 
 #===================================== MAGNETOMETER PLUGIN ======================================//
 add_library(rotors_gazebo_magnetometer_plugin SHARED src/gazebo_magnetometer_plugin.cpp)
