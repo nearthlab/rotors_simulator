@@ -37,7 +37,7 @@ void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
       float fVal = mDisparity.at<float>(i, j);
       float depth = 31.0f;
       if ((fVal > msgRaw->min_disparity)&&(fVal < msgRaw->max_disparity))
-        depth = (msgRaw->T) * ((msgRaw->f) / (fVal));
+        depth = (float)((msgRaw->T) * ((msgRaw->f) / (fVal)));
       mDepth32f.at<float>(i, j) = depth;
       mDepth16u.at<unsigned short>(i, j) = (unsigned short)(depth*1000.0f);
     }
@@ -52,6 +52,7 @@ void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
   mDepth16uROI = mDepth16u(Rect(nShift, 0, mDepth16u.cols - nShift, mDepth16u.rows));
   resize(mDepth32fROI, mDepth32fROI, sizeVGA);
   resize(mDepth16uROI, mDepth16uROI, sizeVGA);  
+  GaussianBlur(mDepth16uROI, mDepth16uROI, Size(3, 3), 0, 0);
 
   cv_bridge::CvImage cvDepthMap32f(msgRaw->header, sensor_msgs::image_encodings::TYPE_32FC1, mDepth32fROI);
   sensor_msgs::Image msgDepthMap32f;
