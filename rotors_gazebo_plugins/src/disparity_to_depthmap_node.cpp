@@ -11,7 +11,10 @@ using namespace ros;
 using namespace cv;
 
 image_transport::Publisher pubDepthMap;
-image_transport::Publisher pubDepthMapRaw;  
+image_transport::Publisher pubDepthMapRaw;
+
+float fDepthMax = 15.0f;
+float fDepthMin = 1.5f;
 
 void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
 {
@@ -35,9 +38,18 @@ void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
     {
       // baseline * focal / disparity
       float fVal = mDisparity.at<float>(i, j);
-      float depth = 31.0f;
+      float depth = 0.0f;
       if ((fVal > msgRaw->min_disparity)&&(fVal < msgRaw->max_disparity))
-        depth = (float)((msgRaw->T) * ((msgRaw->f) / (fVal)));
+      {
+        depth = (float)((msgRaw->T) * ((msgRaw->f) / (fVal + 1.0e-5)));
+
+        if (depth > msgRaw->max_disparity)
+          depth = msgRaw->max_disparity;
+        else if (depth < fDepthMin)
+          depth = fDepthMin;
+      }
+      else
+        depth = msgRaw->max_disparity;
       mDepth32f.at<float>(i, j) = depth;
       mDepth16u.at<unsigned short>(i, j) = (unsigned short)(depth*1000.0f);
     }
@@ -48,11 +60,15 @@ void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
   int nShift = 32;
   mDepth32fROI = Mat::zeros(mDepth32f.rows, mDepth32f.cols, CV_32F);  
   mDepth16uROI = Mat::zeros(mDepth16u.rows, mDepth16u.cols, CV_16U);
-  mDepth32fROI = mDepth32f(Rect(nShift, 0, mDepth32f.cols - nShift, mDepth32f.rows));
-  mDepth16uROI = mDepth16u(Rect(nShift, 0, mDepth16u.cols - nShift, mDepth16u.rows));
+
+  if (!mDepth32f.empty())
+    mDepth32fROI = mDepth32f(Rect(nShift, 0, mDepth32f.cols - nShift, mDepth32f.rows));
+
+  if (!mDepth16u.empty())
+    mDepth16uROI = mDepth16u(Rect(nShift, 0, mDepth16u.cols - nShift, mDepth16u.rows));
+
   resize(mDepth32fROI, mDepth32fROI, sizeVGA);
   resize(mDepth16uROI, mDepth16uROI, sizeVGA);  
-  GaussianBlur(mDepth16uROI, mDepth16uROI, Size(3, 3), 0, 0);
 
   cv_bridge::CvImage cvDepthMap32f(msgRaw->header, sensor_msgs::image_encodings::TYPE_32FC1, mDepth32fROI);
   sensor_msgs::Image msgDepthMap32f;
@@ -63,8 +79,6 @@ void disparityImageCallback(const stereo_msgs::DisparityImageConstPtr& msgRaw)
   sensor_msgs::Image msgDepthMap16u;
   cvDepthMap16u.toImageMsg(msgDepthMap16u);
   pubDepthMapRaw.publish(msgDepthMap16u);
-
-  waitKey(10);
 }
 
 int main (int argc, char **argv)
@@ -82,7 +96,7 @@ int main (int argc, char **argv)
   Time::init();
  
   // Tell ROS how fast to run this node.
-  Rate loop_rate(30);
+  Rate loop_rate(20);
 
   // main loop
   ROS_INFO("starting disparity_to_depthmap_node");
